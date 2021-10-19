@@ -2,15 +2,43 @@
 
 namespace Magezil\BuyList\Api;
 
-use Magezil\BuyList\Model\BuyList;
+use Magezil\BuyList\Api\Data\BuyListInterface;
 
 interface BuyListRepositoryInterface
 {
-    public function getById(int $id): BuyList;
+    /**
+     * @param integer $id
+     * @return BuyListInterface
+     */
+    public function getById(int $id): BuyListInterface;
 
-    public function save(BuyList $buyList): BuyList;
+    /**
+     * @param BuyListInterface $buyList
+     * @return BuyListInterface
+     */
+    public function save(BuyListInterface $buyList): BuyListInterface;
 
-    public function delete(BuyList $buyList): bool;
+    /**
+     * @param BuyListInterface $buyList
+     * @return boolean
+     */
+    public function delete(BuyListInterface $buyList): bool;
 
+    /**
+     * @param integer $id
+     * @return boolean
+     */
     public function deleteById(int $id): bool;
+
+    /**
+     * @param BuyListInterface $buyList
+     * @return BuyListInterface
+     */
+    public function update(BuyListInterface $buyList): BuyListInterface;
+
+    /**
+     * @param integer $id
+     * @return string
+     */
+    public function remove(int $id): string;
 }

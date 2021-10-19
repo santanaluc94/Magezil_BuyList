@@ -34,7 +34,7 @@ interface BuyListItemInterface
 
     public function setCreatedAt(?string $createdAt): self;
 
-    public function getupdatedAt(): ?string;
+    public function getUpdatedAt(): ?string;
 
-    public function setupdatedAt(?string $updatedAt): self;
+    public function setUpdatedAt(?string $updatedAt): self;
 }

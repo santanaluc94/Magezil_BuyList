@@ -80,12 +80,12 @@ class BuyListItem extends AbstractModel implements BuyListItemInterface
         return $this->setData(self::CREATED_AT, $createdAt);
     }
 
-    public function getupdatedAt(): ?string
+    public function getUpdatedAt(): ?string
     {
         return $this->getData(self::UPDATED_AT);
     }
 
-    public function setupdatedAt(?string $updatedAt): self
+    public function setUpdatedAt(?string $updatedAt): self
     {
         return $this->setData(self::UPDATED_AT, $updatedAt);
     }

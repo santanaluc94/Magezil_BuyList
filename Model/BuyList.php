@@ -25,67 +25,112 @@ class BuyList extends AbstractModel implements BuyListInterface
         $this->_init(ResourceModelBuyList::class);
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->getData(self::ID);
     }
 
+    /**
+     * @return int|null
+     */
     public function getCustomerId(): ?int
     {
         return $this->getData(self::CUSTOMER_ID);
     }
 
-    public function setCustomerId(?int $customerId): self
+    /**
+     * @param int $customerId
+     * @return self
+     */
+    public function setCustomerId(int $customerId): self
     {
         return $this->setData(self::CUSTOMER_ID, $customerId);
     }
 
+    /**
+     * @return string|null
+     */
     public function getTitle(): ?string
     {
         return $this->getData(self::TITLE);
     }
 
-    public function setTitle(?string $title): self
+    /**
+     * @param string $title
+     * @return self
+     */
+    public function setTitle(string $title): self
     {
         return $this->setData(self::TITLE, $title);
     }
 
+    /**
+     * @return bool|null
+     */
     public function getIsActive(): ?bool
     {
         return $this->getData(self::IS_ACTIVE);
     }
 
-    public function setIsActive(?bool $isActive): self
+    /**
+     * @param bool $isActive
+     * @return self
+     */
+    public function setIsActive(bool $isActive): self
     {
         return $this->setData(self::IS_ACTIVE, $isActive);
     }
 
+    /**
+     * @return int|null
+     */
     public function getStoreId(): ?int
     {
         return $this->getData(self::STORE_ID);
     }
 
-    public function setStoreId(?int $storeId): self
+    /**
+     * @param int $storeId
+     * @return self
+     */
+    public function setStoreId(int $storeId): self
     {
         return $this->setData(self::STORE_ID, $storeId);
     }
 
+    /**
+     * @return string|null
+     */
     public function getCreatedAt(): ?string
     {
         return $this->getData(self::CREATED_AT);
     }
 
-    public function setCreatedAt(?string $createdAt): self
+    /**
+     * @param string $createdAt
+     * @return self
+     */
+    public function setCreatedAt(string $createdAt): self
     {
         return $this->setData(self::CREATED_AT, $createdAt);
     }
 
-    public function getupdatedAt(): ?string
+    /**
+     * @return string|null
+     */
+    public function getUpdatedAt(): ?string
     {
         return $this->getData(self::UPDATED_AT);
     }
 
-    public function setupdatedAt(?string $updatedAt): self
+    /**
+     * @param string $updatedAt
+     * @return self
+     */
+    public function setUpdatedAt(string $updatedAt): self
     {
         return $this->setData(self::UPDATED_AT, $updatedAt);
     }

@@ -12,29 +12,80 @@ interface BuyListInterface
     public const CREATED_AT = 'created_at';
     public const UPDATED_AT = 'updated_at';
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int;
 
+    /**
+     * @param mixed $value
+     * @return $this
+     */
+    public function setId($value);
+
+    /**
+     * @return int|null
+     */
     public function getCustomerId(): ?int;
 
-    public function setCustomerId(?int $customerId): self;
+    /**
+     * @param int $customerId
+     * @return self
+     */
+    public function setCustomerId(int $customerId): self;
 
+    /**
+     * @return string|null
+     */
     public function getTitle(): ?string;
 
-    public function setTitle(?string $title): self;
+    /**
+     * @param string $title
+     * @return self
+     */
+    public function setTitle(string $title): self;
 
+    /**
+     * @return bool|null
+     */
     public function getIsActive(): ?bool;
 
-    public function setIsActive(?bool $isActive): self;
+    /**
+     * @param bool $isActive
+     * @return self
+     */
+    public function setIsActive(bool $isActive): self;
 
+    /**
+     * @return int|null
+     */
     public function getStoreId(): ?int;
 
-    public function setStoreId(?int $storeId): self;
+    /**
+     * @param int $storeId
+     * @return self
+     */
+    public function setStoreId(int $storeId): self;
 
+    /**
+     * @return string|null
+     */
     public function getCreatedAt(): ?string;
 
-    public function setCreatedAt(?string $createdAt): self;
+    /**
+     * @param string $createdAt
+     * @return self
+     */
+    public function setCreatedAt(string $createdAt): self;
 
-    public function getupdatedAt(): ?string;
+    /**
+     * @return string|null
+     */
+    public function getUpdatedAt(): ?string;
 
-    public function setupdatedAt(?string $updatedAt): self;
+    /**
+     * @param string $updatedAt
+     * @return self
+     */
+    public function setUpdatedAt(string $updatedAt): self;
 }
