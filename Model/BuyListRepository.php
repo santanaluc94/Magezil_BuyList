@@ -122,6 +122,6 @@ class BuyListRepository implements BuyListRepositoryInterface
         $buyList = $this->getById($id);
         $buyList->setIsActive(false);
         $this->save($buyList);
-        return 'The buy list with ID %1 is diabled.';
+        return 'The buy list with ID %1 is disabled.';
     }
 }
