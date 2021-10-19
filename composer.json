@@ -1,6 +1,6 @@
 {
     "name": "magezil/module-buy-list",
-    "description": "Module for Magento 2 that allows the creation of multiple wish lists.",
+    "description": "Custom module that allows the creation of multiple wish lists in Magento 2.",
     "require": {
         "php": "~7.3.0||~7.4.0"
     },

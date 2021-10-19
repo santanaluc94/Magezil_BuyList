@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magezil\BuyList\Api\Data\BuyListInterface" type="Magezil\BuyList\Model\BuyList" />
+    <preference for="Magezil\BuyList\Api\Data\BuyListItemInterface" type="Magezil\BuyList\Model\BuyListItem" />
+    <preference for="Magezil\BuyList\Api\BuyListRepositoryInterface" type="Magezil\BuyList\Model\BuyListRepository" />
+    <preference for="Magezil\BuyList\Api\BuyListItemRepositoryInterface" type="Magezil\BuyList\Model\BuyListItemRepository" />
+</config>
