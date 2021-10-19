@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="magezil_buy_list" resource="default" engine="innodb" comment="Buy List">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID" />
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Customer ID" />
+        <column xsi:type="varchar" name="title" nullable="false" length="255" comment="Buy List Title"/>
+        <column xsi:type="boolean" name="is_active" default="true" comment="Buy List Is Active" />
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="true" identity="false" default="0" comment="Store ID"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="true" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="MAGEZIL_BUY_LIST_PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGEZIL_BUY_LIST_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID" table="magezil_buy_list" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE" />
+        <constraint xsi:type="foreign" referenceId="MAGEZIL_BUY_LIST_STORE_ID_STORE_STORE_ID" table="magezil_buy_list" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="SET NULL" />
+
+        <index referenceId="MAGEZIL_BUY_LIST_ENTITY_ID" indexType="btree">
+            <column name="entity_id"/>
+        </index>
+        <index referenceId="MAGEZIL_BUY_LIST_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+    </table>
+    <table name="magezil_buy_list_item" resource="default" engine="innodb" comment="Buy List Item">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID" />
+        <column xsi:type="int" name="buy_list_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Buy List ID" />
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Product ID" />
+        <column xsi:type="decimal" name="qty" scale="4" precision="12" unsigned="false" nullable="true" comment="Buy List Item Qty"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="true" identity="false" default="0" comment="Store ID"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="true" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="MAGEZIL_BUY_LIST_ITEM_PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGEZIL_BUY_LIST_ITEM_WISHLIST_ID_MAGEZIL_BUY_LIST_ENTITY_ID" table="magezil_buy_list_item" column="buy_list_id" referenceTable="magezil_buy_list" referenceColumn="entity_id" onDelete="CASCADE" />
+        <constraint xsi:type="foreign" referenceId="MAGEZIL_BUY_LIST_ITEM_PRODUCT_ID_COMPASSO_CATALOG_PRODUCT_ENTITY_ENTITY_ID" table="magezil_buy_list_item" column="product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE" />
+        <constraint xsi:type="foreign" referenceId="MAGEZIL_BUY_LIST_ITEM_STORE_ID_STORE_STORE_ID" table="magezil_buy_list_item" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="SET NULL" />
+
+        <index referenceId="MAGEZIL_BUY_LIST_ITEM_ENTITY_ID" indexType="btree">
+            <column name="entity_id"/>
+        </index>
+    </table>
+</schema>
