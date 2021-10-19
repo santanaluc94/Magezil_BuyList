@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magezil" translate="label" sortOrder="0">
+            <label>Magezil</label>
+        </tab>
+
+        <section id="buy_list" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Buy List</label>
+            <tab>magezil</tab>
+            <resource>Magento_Backend::manage</resource>
+            <class>separator-top</class>
+
+            <group id="general" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General Config</label>
+                <comment>Module for Magento 2 that allows buy lists for customers.</comment>
+
+                <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Module Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Title</label>
+                    <validate>letters-with-basic-punc</validate>
+                    <depends>
+                        <field id="buy_list/general/enable">1</field>
+                    </depends>
+                </field>
+
+                <field id="available_customer_groups" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Customer Groups</label>
+                    <source_model>Magezil\BuyList\Model\Source\Config\CustomerGroups</source_model>
+                    <comment>Apply buy list to selected customer groups.</comment>
+                    <depends>
+                        <field id="buy_list/general/enable">1</field>
+                    </depends>
+                </field>
+
+                <field id="delete_lists" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Delete Lists</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enabling the field it will be possible to delete buy lists in the database instead of just disabling them.</comment>
+                    <depends>
+                        <field id="buy_list/general/enable">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="customer" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Customer Config</label>
+
+                <field id="max_qty_lists" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Max Lists by Customer</label>
+                    <validate>integer no-whitespace</validate>
+                    <comment>Maximum number of lists allowed per customer. If you have no item limit, leave the value empty.</comment>
+                </field>
+
+                <field id="max_qty_items" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Max Qty Items</label>
+                    <validate>integer no-whitespace</validate>
+                    <comment>Maximum amount of items allowed per buy list. If you have no item limit, leave the value empty.</comment>
+                </field>
+
+                <field id="show_logged" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Show Only Logged</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Display button to add buy list only for logged customers.</comment>
+                </field>
+
+                <depends>
+                    <field id="buy_list/general/enable">1</field>
+                </depends>
+            </group>
+        </section>
+    </system>
+</config>

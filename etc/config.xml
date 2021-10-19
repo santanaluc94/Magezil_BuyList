@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <buy_list>
+            <general>
+                <enable>0</enable>
+                <title>Buy Lists</title>
+                <available_customer_groups>1,2,3</available_customer_groups>
+                <delete_lists>0</delete_lists>
+            </general>
+            <customer>
+                <max_qty_lists></max_qty_lists>
+                <max_qty_items></max_qty_items>
+                <show_logged>1</show_logged>
+            </customer>
+        </buy_list>
+    </default>
+</config>
