@@ -1,25 +1,25 @@
 <?xml version="1.0"?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
     <route method="GET" url="/V1/buyList/:id">
-        <service class="Magezil\BuyList\Api\BuyListRepositoryInterface" method="getById"/>
+        <service class="Magezil\BuyList\Api\BuyListServiceInterface" method="get"/>
         <resources>
             <resource ref="Magezil_BuyList::view"/>
         </resources>
     </route>
     <route method="POST" url="/V1/buyList">
-        <service class="Magezil\BuyList\Api\BuyListRepositoryInterface" method="save"/>
+        <service class="Magezil\BuyList\Api\BuyListServiceInterface" method="create"/>
         <resources>
             <resource ref="Magezil_BuyList::save"/>
         </resources>
     </route>
     <route method="PUT" url="/V1/buyList">
-        <service class="Magezil\BuyList\Api\BuyListRepositoryInterface" method="update"/>
+        <service class="Magezil\BuyList\Api\BuyListServiceInterface" method="update"/>
         <resources>
             <resource ref="Magezil_BuyList::save"/>
         </resources>
     </route>
     <route method="DELETE" url="/V1/buyList/:id">
-        <service class="Magezil\BuyList\Api\BuyListRepositoryInterface" method="remove"/>
+        <service class="Magezil\BuyList\Api\BuyListServiceInterface" method="remove"/>
         <resources>
             <resource ref="Magezil_BuyList::delete"/>
         </resources>
