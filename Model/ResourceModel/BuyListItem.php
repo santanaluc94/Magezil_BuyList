@@ -3,7 +3,6 @@
 namespace Magezil\BuyList\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Model\ResourceModel\Db\Context;
 
 class BuyListItem extends AbstractDb
 {

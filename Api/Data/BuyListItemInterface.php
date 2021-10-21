@@ -8,33 +8,72 @@ interface BuyListItemInterface
     public const BUY_LIST_ID = 'buy_list_id';
     public const PRODUCT_ID = 'product_id';
     public const QTY = 'qty';
-    public const STORE_ID = 'store_id';
     public const CREATED_AT = 'created_at';
     public const UPDATED_AT = 'updated_at';
 
+    /**
+     * @return integer|null
+     */
     public function getId(): ?int;
 
+    /**
+     * @param mixed $value
+     * @return $this
+     */
+    public function setId($value);
+
+    /**
+     * @return integer|null
+     */
     public function getBuyListId(): ?int;
 
-    public function setBuyListId(?int $buyListId): self;
+    /**
+     * @param integer $buyListId
+     * @return self
+     */
+    public function setBuyListId(int $buyListId): self;
 
+    /**
+     * @return integer|null
+     */
     public function getProductId(): ?int;
 
-    public function setProductId(?int $productId): self;
+    /**
+     * @param integer $productId
+     * @return self
+     */
+    public function setProductId(int $productId): self;
 
+    /**
+     * @return float|null
+     */
     public function getQty(): ?float;
 
-    public function setQty(?float $qty): self;
+    /**
+     * @param float $qty
+     * @return self
+     */
+    public function setQty(float $qty): self;
 
-    public function getStoreId(): ?int;
-
-    public function setStoreId(?int $storeId): self;
-
+    /**
+     * @return string|null
+     */
     public function getCreatedAt(): ?string;
 
-    public function setCreatedAt(?string $createdAt): self;
+    /**
+     * @param string $createdAt
+     * @return self
+     */
+    public function setCreatedAt(string $createdAt): self;
 
+    /**
+     * @return string|null
+     */
     public function getUpdatedAt(): ?string;
 
-    public function setUpdatedAt(?string $updatedAt): self;
+    /**
+     * @param string $updatedAt
+     * @return self
+     */
+    public function setUpdatedAt(string $updatedAt): self;
 }

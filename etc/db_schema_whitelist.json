@@ -25,7 +25,6 @@
             "buy_list_id": true,
             "product_id": true,
             "qty": true,
-            "store_id": true,
             "created_at": true,
             "updated_at": true
         },
@@ -35,8 +34,7 @@
         "constraint": {
             "PRIMARY": true,
             "MAGEZIL_BUY_LIST_ITEM_BUY_LIST_ID_MAGEZIL_BUY_LIST_ENTITY_ID": true,
-            "MAGEZIL_BUY_LIST_ITEM_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true,
-            "MAGEZIL_BUY_LIST_ITEM_STORE_ID_STORE_STORE_ID": true
+            "MAGEZIL_BUY_LIST_ITEM_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
         }
     }
 }

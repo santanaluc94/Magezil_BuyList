@@ -5,4 +5,5 @@
     <preference for="Magezil\BuyList\Api\BuyListRepositoryInterface" type="Magezil\BuyList\Model\BuyListRepository" />
     <preference for="Magezil\BuyList\Api\BuyListItemRepositoryInterface" type="Magezil\BuyList\Model\BuyListItemRepository" />
     <preference for="Magezil\BuyList\Api\BuyListServiceInterface" type="Magezil\BuyList\Service\BuyListService" />
+    <preference for="Magezil\BuyList\Api\BuyListItemServiceInterface" type="Magezil\BuyList\Service\BuyListItemService" />
 </config>

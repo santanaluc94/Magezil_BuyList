@@ -1,4 +1,10 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Magezil_BuyList" />
+    <module name="Magezil_BuyList">
+        <sequence>
+            <module name="Magento_Store" />
+            <module name="Magento_Customer" />
+            <module name="Magento_Catalog" />
+        </sequence>
+    </module>
 </config>
