@@ -4,7 +4,7 @@ namespace Magezil\BuyList\Api;
 
 use Magezil\BuyList\Api\Data\BuyListInterface;
 
-interface BuyListCustomerServiceInterface
+interface CustomerBuyListServiceInterface
 {
     /**
      * @param integer $id

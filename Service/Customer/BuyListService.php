@@ -2,7 +2,7 @@
 
 namespace Magezil\BuyList\Service\Customer;
 
-use Magezil\BuyList\Api\BuyListCustomerServiceInterface;
+use Magezil\BuyList\Api\CustomerBuyListServiceInterface;
 use Magezil\BuyList\Api\BuyListRepositoryInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
@@ -12,8 +12,7 @@ use Magento\Framework\Exception\AuthorizationException;
 use Magento\Framework\Exception\ValidatorException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-
-class BuyListService implements BuyListCustomerServiceInterface
+class BuyListService implements CustomerBuyListServiceInterface
 {
     protected BuyListRepositoryInterface $buyListRepository;
     protected ManagerInterface $eventManager;
@@ -43,7 +42,18 @@ class BuyListService implements BuyListCustomerServiceInterface
             throw new AuthorizationException(__('This API can only be accessed by a logged customer.'));
         }
 
-        return $this->buyListRepository->getById($id);
+        $buyList = $this->buyListRepository->getById($id);
+
+        if ($buyList->getCustomerId() !== $customerId) {
+            throw new NoSuchEntityException(
+                __(
+                    'The buy list with ID %1 does not belong to the logged in customer.',
+                    BuyListInterface::ID
+                )
+            );
+        }
+
+        return $buyList;
     }
 
     /**
@@ -161,7 +171,8 @@ class BuyListService implements BuyListCustomerServiceInterface
     }
 
     protected function prepareToCreateBuyListValid(
-        BuyListInterface $buyList
+        BuyListInterface $buyList,
+        int $customerId
     ): BuyListInterface {
         if (!$this->isValidStoreId($buyList->getStoreId())) {
             throw new ValidatorException(__('The store with ID %1 does not exist.'));
