@@ -51,4 +51,80 @@
             <resource ref="Magezil_BuyList::items_delete"/>
         </resources>
     </route>
+
+    <!-- Customer Buy List APIs -->
+    <route method="GET" url="/V1/customer/buyList/:id">
+        <service class="Magezil\BuyList\Api\CustomerBuyListServiceInterface" method="get"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route method="POST" url="/V1/customer/buyList">
+        <service class="Magezil\BuyList\Api\CustomerBuyListServiceInterface" method="create"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route method="PUT" url="/V1/customer/buyList">
+        <service class="Magezil\BuyList\Api\CustomerBuyListServiceInterface" method="update"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route method="DELETE" url="/V1/customer/buyList/:id">
+        <service class="Magezil\BuyList\Api\CustomerBuyListServiceInterface" method="remove"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <!-- Customer Buy List Item APIs -->
+    <route method="GET" url="/V1/customer/buyList/item/:id">
+        <service class="Magezil\BuyList\Api\CustomerBuyListItemServiceInterface" method="get"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route method="POST" url="/V1/customer/buyList/:buyListId/item">
+        <service class="Magezil\BuyList\Api\CustomerBuyListItemServiceInterface" method="saveItem"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route method="PUT" url="/V1/customer/buyList/:buyListId/item">
+        <service class="Magezil\BuyList\Api\CustomerBuyListItemServiceInterface" method="saveItem"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route method="DELETE" url="/V1/customer/buyList/:buyListId/item/:id">
+        <service class="Magezil\BuyList\Api\CustomerBuyListItemServiceInterface" method="remove"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
 </routes>
