@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Admin Buy List APIs -->
     <route method="GET" url="/V1/buyList/:id">
         <service class="Magezil\BuyList\Api\BuyListServiceInterface" method="get"/>
         <resources>
@@ -25,21 +26,21 @@
         </resources>
     </route>
 
-    <!-- Items -->
-    <route method="GET" url="/V1/buyList/item/:itemId">
+    <!-- Admin Buy List Item APIs -->
+    <route method="GET" url="/V1/buyList/item/:id">
         <service class="Magezil\BuyList\Api\BuyListItemServiceInterface" method="get"/>
         <resources>
             <resource ref="Magezil_BuyList::items_view"/>
         </resources>
     </route>
     <route method="POST" url="/V1/buyList/:buyListId/item">
-        <service class="Magezil\BuyList\Api\BuyListItemServiceInterface" method="createItem"/>
+        <service class="Magezil\BuyList\Api\BuyListItemServiceInterface" method="saveItem"/>
         <resources>
             <resource ref="Magezil_BuyList::items_save"/>
         </resources>
     </route>
     <route method="PUT" url="/V1/buyList/:buyListId/item">
-        <service class="Magezil\BuyList\Api\BuyListItemServiceInterface" method="updateItem"/>
+        <service class="Magezil\BuyList\Api\BuyListItemServiceInterface" method="saveItem"/>
         <resources>
             <resource ref="Magezil_BuyList::items_save"/>
         </resources>

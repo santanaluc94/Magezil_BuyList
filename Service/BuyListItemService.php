@@ -9,9 +9,7 @@ use Magezil\BuyList\Model\ResourceModel\BuyListItem\CollectionFactory as BuyList
 use Magezil\BuyList\Model\BuyListItemFactory;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magezil\BuyList\Api\BuyListRepositoryInterface;
-use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\Framework\Event\ManagerInterface;
-
 use Magezil\BuyList\Api\Data\BuyListItemInterface;
 use Magezil\BuyList\Model\ResourceModel\BuyListItem\Collection as BuyListItemCollection;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -25,29 +23,33 @@ class BuyListItemService implements BuyListItemServiceInterface
     protected BuyListItemFactory $buyListItemFactory;
     protected ProductRepositoryInterface $productRepository;
     protected BuyListRepositoryInterface $buyListRepository;
-    protected StoreRepositoryInterface $storeRepository;
     protected ManagerInterface $eventManager;
 
-    public function __construct()
-    {
-        $this->objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->buyListItemRepository = $this->objectManager->create(BuyListItemRepositoryInterface::class);
-        $this->buyListSettings = $this->objectManager->create(Settings::class);
-        $this->buyListItemCollectionFactory = $this->objectManager->create(BuyListItemCollectionFactory::class);
-        $this->buyListItemFactory = $this->objectManager->create(BuyListItemFactory::class);
-        $this->productRepository = $this->objectManager->create(ProductRepositoryInterface::class);
-        $this->buyListRepository = $this->objectManager->create(BuyListRepositoryInterface::class);
-        $this->storeRepository = $this->objectManager->create(StoreRepositoryInterface::class);
-        $this->eventManager = $this->objectManager->create(ManagerInterface::class);
+    public function __construct(
+        BuyListItemRepositoryInterface $buyListItemRepository,
+        Settings $buyListSettings,
+        BuyListItemCollectionFactory $buyListItemCollectionFactory,
+        BuyListItemFactory $buyListItemFactory,
+        ProductRepositoryInterface $productRepository,
+        BuyListRepositoryInterface $buyListRepository,
+        ManagerInterface $eventManager
+    ) {
+        $this->buyListItemRepository = $buyListItemRepository;
+        $this->buyListSettings = $buyListSettings;
+        $this->buyListItemCollectionFactory = $buyListItemCollectionFactory;
+        $this->buyListItemFactory = $buyListItemFactory;
+        $this->productRepository = $productRepository;
+        $this->buyListRepository = $buyListRepository;
+        $this->eventManager = $eventManager;
     }
 
     /**
-     * @param integer $itemId
+     * @param integer $id
      * @return BuyListItemInterface
      */
-    public function get(int $itemId): BuyListItemInterface
+    public function get(int $id): BuyListItemInterface
     {
-        return $this->buyListItemRepository->getById($itemId);
+        return $this->buyListItemRepository->getById($id);
     }
 
     /**
@@ -55,7 +57,7 @@ class BuyListItemService implements BuyListItemServiceInterface
      * @param BuyListItemInterface $item
      * @return BuyListItemInterface
      */
-    public function createItem(
+    public function saveItem(
         int $buyListId,
         BuyListItemInterface $item
     ): BuyListItemInterface {
@@ -78,61 +80,12 @@ class BuyListItemService implements BuyListItemServiceInterface
         }
 
         if (!$this->isValidProductId($item->getProductId())) {
-            throw new ValidatorException(__('The product with ID %1 does not exist.'));
+            throw new NoSuchEntityException(__('The product with ID %1 does not exist.'));
         }
 
         $this->eventManager->dispatch(
-            'buy_list_item_api_create_before',
+            'buy_list_item_api_save_before',
             ['$item' => $item]
-        );
-
-        $hasItemInBuyList = $buyListItemCollection->addFieldToFilter(
-            BuyListItemInterface::PRODUCT_ID,
-            $item->getProductId()
-        )->getSize();
-
-        if ($hasItemInBuyList) {
-            throw new ValidatorException(__(
-                'The product with ID %1 already exist in buy list %2.',
-                $item->getProductId(),
-                $buyListId
-            ));
-        }
-
-        $buyListItem = $this->buyListItemFactory->create();
-        $buyListItem->setBuyListId($buyListId);
-        $buyListItem->setProductId($item->getProductId());
-        $buyListItem->setQty($item->getQty());
-        $buyListItemCreated = $this->buyListItemRepository->save($buyListItem);
-
-        $this->eventManager->dispatch(
-            'buy_list_item_api_create_after',
-            ['items' => $buyListItemCreated]
-        );
-
-        return $buyListItemCreated;
-    }
-
-    /**
-     * @param integer $buyListId
-     * @param BuyListItemInterface $item
-     * @return BuyListItemInterface
-     */
-    public function updateItem(
-        int $buyListId,
-        BuyListItemInterface $item
-    ): BuyListItemInterface {
-        if (!$this->isBuyListEnabled($buyListId)) {
-            throw new ValidatorException(
-                __('It is not possible to add items to the buy list because this buy list is disabled.')
-            );
-        }
-
-        $this->isValidProductId($item->getProductId());
-
-        $this->eventManager->dispatch(
-            'buy_list_item_api_update_before',
-            ['buyList' => $item]
         );
 
         /** @var BuyListItemInterface $item */
@@ -146,7 +99,7 @@ class BuyListItemService implements BuyListItemServiceInterface
         $buyListItem = $this->buyListItemRepository->save($buyListItem);
 
         $this->eventManager->dispatch(
-            'buy_list_item_api_update_after',
+            'buy_list_item_api_save_after',
             ['buyList' => $buyListItem]
         );
 
@@ -200,7 +153,7 @@ class BuyListItemService implements BuyListItemServiceInterface
         return true;
     }
 
-    public function isListFull(int $buyListSize): bool
+    protected function isListFull(int $buyListSize): bool
     {
         if (
             !empty($this->buyListSettings->getMaxQtyItems()) &&

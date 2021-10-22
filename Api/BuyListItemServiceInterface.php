@@ -7,27 +7,17 @@ use Magezil\BuyList\Api\Data\BuyListItemInterface;
 interface BuyListItemServiceInterface
 {
     /**
-     * @param integer $itemId
+     * @param integer $id
      * @return BuyListItemInterface
      */
-    public function get(int $itemId): BuyListItemInterface;
+    public function get(int $id): BuyListItemInterface;
 
     /**
      * @param integer $buyListId
      * @param BuyListItemInterface $item
      * @return BuyListItemInterface
      */
-    public function createItem(
-        int $buyListId,
-        BuyListItemInterface $item
-    ): BuyListItemInterface;
-
-    /**
-     * @param integer $buyListId
-     * @param BuyListItemInterface $item
-     * @return BuyListItemInterface
-     */
-    public function updateItem(
+    public function saveItem(
         int $buyListId,
         BuyListItemInterface $item
     ): BuyListItemInterface;
