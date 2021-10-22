@@ -1,65 +1,73 @@
 <?php
 
-namespace Magezil\BuyList\Service;
+namespace Magezil\BuyList\Service\Customer;
 
-use Magezil\BuyList\Api\BuyListServiceInterface;
+use Magezil\BuyList\Api\BuyListCustomerServiceInterface;
 use Magezil\BuyList\Api\BuyListRepositoryInterface;
-use Magezil\BuyList\Model\Source\Config\Settings;
 use Magento\Framework\Event\ManagerInterface;
-use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
+use Magezil\BuyList\Model\Source\Config\Settings;
 use Magezil\BuyList\Api\Data\BuyListInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\AuthorizationException;
 use Magento\Framework\Exception\ValidatorException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
-class BuyListService implements BuyListServiceInterface
+
+class BuyListService implements BuyListCustomerServiceInterface
 {
     protected BuyListRepositoryInterface $buyListRepository;
-    protected Settings $buyListSettings;
     protected ManagerInterface $eventManager;
-    protected CustomerRepositoryInterface $customerRepository;
     protected StoreRepositoryInterface $storeRepository;
+    protected Settings $buyListSettings;
 
     public function __construct(
         BuyListRepositoryInterface $buyListRepository,
-        Settings $buyListSettings,
         ManagerInterface $eventManager,
-        CustomerRepositoryInterface $customerRepository,
-        StoreRepositoryInterface $storeRepository
+        StoreRepositoryInterface $storeRepository,
+        Settings $buyListSettings
     ) {
         $this->buyListRepository = $buyListRepository;
-        $this->buyListSettings = $buyListSettings;
         $this->eventManager = $eventManager;
-        $this->customerRepository = $customerRepository;
         $this->storeRepository = $storeRepository;
+        $this->buyListSettings = $buyListSettings;
     }
 
     /**
      * @param integer $id
+     * @param integer $customerId
      * @return BuyListInterface
      */
-    public function get(int $id): BuyListInterface
+    public function get(int $id, int $customerId): BuyListInterface
     {
+        if (!isset($customerId)) {
+            throw new AuthorizationException(__('This API can only be accessed by a logged customer.'));
+        }
+
         return $this->buyListRepository->getById($id);
     }
 
     /**
      * @param BuyListInterface $buyList
+     * @param integer $customerId
      * @return BuyListInterface
      */
-    public function create(BuyListInterface $buyList): BuyListInterface
+    public function create(BuyListInterface $buyList, int $customerId): BuyListInterface
     {
+        if (!isset($customerId)) {
+            throw new AuthorizationException(__('This API can only be accessed by a logged customer.'));
+        }
+
         $this->eventManager->dispatch(
-            'buy_list_api_create_before',
+            'buy_list_api_customer_create_before',
             ['buyList' => $buyList]
         );
 
-        $buyList = $this->prepareToCreateBuyListValid($buyList);
+        $buyList = $this->prepareToCreateBuyListValid($buyList, $customerId);
 
         $buyListCreated = $this->buyListRepository->save($buyList);
 
         $this->eventManager->dispatch(
-            'buy_list_api_create_after',
+            'buy_list_api_customer_create_after',
             ['buyList' => $buyListCreated]
         );
 
@@ -68,12 +76,34 @@ class BuyListService implements BuyListServiceInterface
 
     /**
      * @param BuyListInterface $buyList
+     * @param integer $customerId
      * @return BuyListInterface
      */
-    public function update(BuyListInterface $buyList): BuyListInterface
+    public function update(BuyListInterface $buyList, int $customerId): BuyListInterface
     {
+        if (!isset($customerId)) {
+            throw new AuthorizationException(__('This API can only be accessed by a logged customer.'));
+        }
+
+        if (!$buyList->getId()) {
+            throw new NoSuchEntityException(
+                __('Unable to update an object without the field "%1"', BuyListInterface::ID)
+            );
+        }
+
+        $oldBuyList = $this->get($buyList->getId(), $customerId);
+
+        if ($oldBuyList->getCustomerId() !== $customerId) {
+            throw new NoSuchEntityException(
+                __(
+                    'The buy list with ID %1 does not belong to the logged in customer.',
+                    BuyListInterface::ID
+                )
+            );
+        }
+
         $this->eventManager->dispatch(
-            'buy_list_api_update_before',
+            'buy_list_api_customer_update_before',
             ['buyList' => $buyList]
         );
 
@@ -82,7 +112,7 @@ class BuyListService implements BuyListServiceInterface
         $buyListUpdated = $this->buyListRepository->save($buyList);
 
         $this->eventManager->dispatch(
-            'buy_list_api_update_after',
+            'buy_list_api_customer_update_after',
             ['buyList' => $buyListUpdated]
         );
 
@@ -91,27 +121,41 @@ class BuyListService implements BuyListServiceInterface
 
     /**
      * @param integer $id
+     * @param integer $customerId
      * @return string
      */
-    public function remove(int $id): string
+    public function remove(int $id, int $customerId): string
     {
+        if (!isset($customerId)) {
+            throw new AuthorizationException(__('This API can only be accessed by a logged customer.'));
+        }
+
         $buyList = $this->buyListRepository->getById($id);
 
+        if ($buyList->getCustomerId() !== $customerId) {
+            throw new NoSuchEntityException(
+                __(
+                    'The buy list with ID %1 does not belong to the logged in customer.',
+                    BuyListInterface::ID
+                )
+            );
+        }
+
         $this->eventManager->dispatch(
-            'buy_list_api_remove_before',
+            'buy_list_api_customer_remove_before',
             ['buyList' => $buyList]
         );
 
         if ($this->buyListSettings->isDeleteLists()) {
             $this->buyListRepository->deleteById($id);
-            $this->eventManager->dispatch('buy_list_api_remove_after');
+            $this->eventManager->dispatch('buy_list_api_customer_remove_after');
 
             return __('The buy list with ID %1 was removed.', $id);
         }
 
         $buyList->setIsActive(false);
         $this->buyListRepository->save($buyList);
-        $this->eventManager->dispatch('buy_list_api_remove_after');
+        $this->eventManager->dispatch('buy_list_api_customer_remove_after');
 
         return __('The buy list with ID %1 is disabled.', $id);
     }
@@ -119,17 +163,13 @@ class BuyListService implements BuyListServiceInterface
     protected function prepareToCreateBuyListValid(
         BuyListInterface $buyList
     ): BuyListInterface {
-        if (!$this->isValidCustomerId($buyList->getCustomerId())) {
-            throw new ValidatorException(__('The customer with ID %1 does not exist.'));
-        }
-
         if (!$this->isValidStoreId($buyList->getStoreId())) {
             throw new ValidatorException(__('The store with ID %1 does not exist.'));
         }
 
         $titleSanitized = filter_var($buyList->getTitle(), FILTER_SANITIZE_STRING);
 
-        $buyList->setCustomerId((int) $buyList->getCustomerId());
+        $buyList->setCustomerId((int) $customerId);
         $buyList->setTitle($titleSanitized);
         $buyList->setIsActive((bool) $buyList->getIsActive());
         $buyList->setStoreId((int) $buyList->getStoreId());
@@ -144,14 +184,6 @@ class BuyListService implements BuyListServiceInterface
             throw new NoSuchEntityException(
                 __('Unable to update an object without the field "%1"', BuyListInterface::ID)
             );
-        }
-
-        if (!is_null($buyList->getCustomerId())) {
-            if (!$this->isValidCustomerId($buyList->getCustomerId())) {
-                throw new ValidatorException(__('The customer with ID %1 does not exist.'));
-            }
-
-            $buyList->setCustomerId((int) $buyList->getCustomerId());
         }
 
         if (!is_null($buyList->getTitle())) {
@@ -172,17 +204,6 @@ class BuyListService implements BuyListServiceInterface
         }
 
         return $buyList;
-    }
-
-    protected function isValidCustomerId(int $customerId): bool
-    {
-        $customer = $this->customerRepository->getById($customerId);
-
-        if (!$customer->getId()) {
-            return false;
-        }
-
-        return true;
     }
 
     protected function isValidStoreId(int $storeId): bool
