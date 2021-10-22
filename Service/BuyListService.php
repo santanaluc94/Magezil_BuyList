@@ -106,14 +106,14 @@ class BuyListService implements BuyListServiceInterface
             $this->buyListRepository->deleteById($id);
             $this->eventManager->dispatch('buy_list_api_remove_after');
 
-            return 'The buy list with ID %1 was removed.';
+            return __('The buy list with ID %1 was removed.', $id);
         }
 
         $buyList->setIsActive(false);
         $this->buyListRepository->save($buyList);
         $this->eventManager->dispatch('buy_list_api_remove_after');
 
-        return 'The buy list with ID %1 is disabled.';
+        return __('The buy list with ID %1 is disabled.', $id);
     }
 
     protected function prepareToCreateBuyListValid(
@@ -146,7 +146,7 @@ class BuyListService implements BuyListServiceInterface
             $buyList->setCustomerId((int) $buyList->getCustomerId());
         }
 
-        if (!is_null($buyList->setTitle($buyList->getTitle()))) {
+        if (!is_null($buyList->getTitle())) {
             $titleSanitized = filter_var($buyList->getTitle(), FILTER_SANITIZE_STRING);
             $buyList->setTitle($titleSanitized);
         }

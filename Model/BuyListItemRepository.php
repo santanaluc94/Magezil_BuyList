@@ -4,7 +4,8 @@ namespace Magezil\BuyList\Model;
 
 use Magezil\BuyList\Api\BuyListItemRepositoryInterface;
 use Magezil\BuyList\Model\BuyListItemFactory;
-use Magezil\BuyList\Model\ResourceModel\BuyListItem as ResourceModelBuyList;
+use Magezil\BuyList\Model\ResourceModel\BuyListItem as ResourceModelBuyListItem;
+use Magezil\BuyList\Api\Data\BuyListItemInterface;
 use Magezil\BuyList\Model\BuyListItem;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -13,31 +14,33 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 class BuyListItemRepository implements BuyListItemRepositoryInterface
 {
     private BuyListItemFactory $buyListItemFactory;
-    private ResourceModelBuyList $resourceModelBuyListItem;
+    private ResourceModelBuyListItem $resourceModelBuyListItem;
 
     public function __construct(
         BuyListItemFactory $buyListItemFactory,
-        ResourceModelBuyList $resourceModelBuyListItem
+        ResourceModelBuyListItem $resourceModelBuyListItem
     ) {
         $this->buyListItemFactory = $buyListItemFactory;
         $this->resourceModelBuyListItem = $resourceModelBuyListItem;
     }
 
-    public function getById(int $id): BuyListItem
+    public function getById(int $id): BuyListItemInterface
     {
+        /** @var BuyListItem $buyListItem */
         $buyListItem = $this->buyListItemFactory->create();
         $this->resourceModelBuyListItem->load($buyListItem, $id);
 
-        if(!$buyListItem->getId()) {
-            throw NoSuchEntityException::singleField(BuyListItem::ID, $id);
+        if (!$buyListItem->getId()) {
+            throw NoSuchEntityException::singleField(BuyListItemInterface::ID, $id);
         }
 
         return $buyListItem;
     }
 
-    public function save(BuyListItem $buyListItem): BuyListItem
+    public function save(BuyListItemInterface $buyListItem): BuyListItemInterface
     {
         try {
+            /** @var BuyListItem $buyListItem */
             $buyListItem->getResource()->save($buyListItem);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
@@ -48,9 +51,10 @@ class BuyListItemRepository implements BuyListItemRepositoryInterface
         return $buyListItem;
     }
 
-    public function delete(BuyListItem $buyListItem): bool
+    public function delete(BuyListItemInterface $buyListItem): bool
     {
         try {
+            /** @var BuyListItem $buyListItem */
             $this->resourceModelBuyListItem->delete($buyListItem);
         } catch (\Exception $exception) {
             throw new CouldNotDeleteException(__(
