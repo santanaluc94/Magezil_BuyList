@@ -2,36 +2,39 @@
 
 namespace Magezil\BuyList\Service;
 
+use Magezil\BuyList\Service\AbstractBuyList;
 use Magezil\BuyList\Api\BuyListServiceInterface;
-use Magezil\BuyList\Api\BuyListRepositoryInterface;
 use Magezil\BuyList\Model\Source\Config\Settings;
-use Magento\Framework\Event\ManagerInterface;
+use Magezil\BuyList\Api\BuyListRepositoryInterface;
+use Magezil\BuyList\Api\BuyListItemRepositoryInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
+use Magento\Framework\Event\ManagerInterface;
 use Magezil\BuyList\Api\Data\BuyListInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\ValidatorException;
 
-class BuyListService implements BuyListServiceInterface
+class BuyListService extends AbstractBuyList implements BuyListServiceInterface
 {
-    protected BuyListRepositoryInterface $buyListRepository;
-    protected Settings $buyListSettings;
-    protected ManagerInterface $eventManager;
-    protected CustomerRepositoryInterface $customerRepository;
-    protected StoreRepositoryInterface $storeRepository;
-
     public function __construct(
-        BuyListRepositoryInterface $buyListRepository,
         Settings $buyListSettings,
-        ManagerInterface $eventManager,
+        BuyListRepositoryInterface $buyListRepository,
+        BuyListItemRepositoryInterface $buyListItemRepository,
+        ProductRepositoryInterface $productRepository,
         CustomerRepositoryInterface $customerRepository,
-        StoreRepositoryInterface $storeRepository
+        StoreRepositoryInterface $storeRepository,
+        ManagerInterface $eventManager
     ) {
-        $this->buyListRepository = $buyListRepository;
-        $this->buyListSettings = $buyListSettings;
-        $this->eventManager = $eventManager;
-        $this->customerRepository = $customerRepository;
-        $this->storeRepository = $storeRepository;
+        parent::__construct(
+            $buyListSettings,
+            $buyListRepository,
+            $buyListItemRepository,
+            $productRepository,
+            $customerRepository,
+            $storeRepository,
+            $eventManager
+        );
     }
 
     /**
@@ -172,27 +175,5 @@ class BuyListService implements BuyListServiceInterface
         }
 
         return $buyList;
-    }
-
-    protected function isValidCustomerId(int $customerId): bool
-    {
-        $customer = $this->customerRepository->getById($customerId);
-
-        if (!$customer->getId()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function isValidStoreId(int $storeId): bool
-    {
-        $store = $this->storeRepository->getById($storeId);
-
-        if (!$store->getId()) {
-            return false;
-        }
-
-        return true;
     }
 }

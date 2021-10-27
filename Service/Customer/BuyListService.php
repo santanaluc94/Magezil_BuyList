@@ -2,33 +2,40 @@
 
 namespace Magezil\BuyList\Service\Customer;
 
+use Magezil\BuyList\Service\AbstractBuyList;
 use Magezil\BuyList\Api\CustomerBuyListServiceInterface;
-use Magezil\BuyList\Api\BuyListRepositoryInterface;
-use Magento\Framework\Event\ManagerInterface;
-use Magento\Store\Api\StoreRepositoryInterface;
 use Magezil\BuyList\Model\Source\Config\Settings;
+use Magezil\BuyList\Api\BuyListRepositoryInterface;
+use Magezil\BuyList\Api\BuyListItemRepositoryInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Store\Api\StoreRepositoryInterface;
+use Magento\Framework\Event\ManagerInterface;
 use Magezil\BuyList\Api\Data\BuyListInterface;
 use Magento\Framework\Exception\AuthorizationException;
 use Magento\Framework\Exception\ValidatorException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-class BuyListService implements CustomerBuyListServiceInterface
+class BuyListService extends AbstractBuyList implements CustomerBuyListServiceInterface
 {
-    protected BuyListRepositoryInterface $buyListRepository;
-    protected ManagerInterface $eventManager;
-    protected StoreRepositoryInterface $storeRepository;
-    protected Settings $buyListSettings;
-
     public function __construct(
+        Settings $buyListSettings,
         BuyListRepositoryInterface $buyListRepository,
-        ManagerInterface $eventManager,
+        BuyListItemRepositoryInterface $buyListItemRepository,
+        ProductRepositoryInterface $productRepository,
+        CustomerRepositoryInterface $customerRepository,
         StoreRepositoryInterface $storeRepository,
-        Settings $buyListSettings
+        ManagerInterface $eventManager
     ) {
-        $this->buyListRepository = $buyListRepository;
-        $this->eventManager = $eventManager;
-        $this->storeRepository = $storeRepository;
-        $this->buyListSettings = $buyListSettings;
+        parent::__construct(
+            $buyListSettings,
+            $buyListRepository,
+            $buyListItemRepository,
+            $productRepository,
+            $customerRepository,
+            $storeRepository,
+            $eventManager
+        );
     }
 
     /**
@@ -39,12 +46,14 @@ class BuyListService implements CustomerBuyListServiceInterface
     public function get(int $id, int $customerId): BuyListInterface
     {
         if (!isset($customerId)) {
-            throw new AuthorizationException(__('This API can only be accessed by a logged customer.'));
+            throw new AuthorizationException(
+                __('This API can only be accessed by a logged customer.')
+            );
         }
 
         $buyList = $this->buyListRepository->getById($id);
 
-        if ($buyList->getCustomerId() !== $customerId) {
+        if (!$this->isCustomerBelongsToBuyList($buyList->getId(), $customerId)) {
             throw new NoSuchEntityException(
                 __(
                     'The buy list with ID %1 does not belong to the logged in customer.',
@@ -142,7 +151,7 @@ class BuyListService implements CustomerBuyListServiceInterface
 
         $buyList = $this->buyListRepository->getById($id);
 
-        if ($buyList->getCustomerId() !== $customerId) {
+        if (!$this->isCustomerBelongsToBuyList($buyList->getId(), $customerId)) {
             throw new NoSuchEntityException(
                 __(
                     'The buy list with ID %1 does not belong to the logged in customer.',
@@ -215,16 +224,5 @@ class BuyListService implements CustomerBuyListServiceInterface
         }
 
         return $buyList;
-    }
-
-    protected function isValidStoreId(int $storeId): bool
-    {
-        $store = $this->storeRepository->getById($storeId);
-
-        if (!$store->getId()) {
-            return false;
-        }
-
-        return true;
     }
 }
