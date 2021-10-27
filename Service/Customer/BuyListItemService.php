@@ -2,45 +2,49 @@
 
 namespace Magezil\BuyList\Service\Customer;
 
+use Magezil\BuyList\Service\AbstractBuyList;
 use Magezil\BuyList\Api\CustomerBuyListItemServiceInterface;
-use Magezil\BuyList\Api\BuyListItemRepositoryInterface;
-use Magezil\BuyList\Api\BuyListRepositoryInterface;
-use Magezil\BuyList\Model\ResourceModel\BuyListItem\CollectionFactory as BuyListItemCollectionFactory;
 use Magezil\BuyList\Model\Source\Config\Settings;
+use Magezil\BuyList\Api\BuyListRepositoryInterface;
+use Magezil\BuyList\Api\BuyListItemRepositoryInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magezil\BuyList\Model\BuyListItemFactory;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\Framework\Event\ManagerInterface;
+use Magezil\BuyList\Model\ResourceModel\BuyListItem\CollectionFactory as BuyListItemCollectionFactory;
+use Magezil\BuyList\Model\BuyListItemFactory;
 use Magezil\BuyList\Api\Data\BuyListItemInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\AuthorizationException;
 use Magento\Framework\Exception\ValidatorException;
 
-class BuyListItemService implements CustomerBuyListItemServiceInterface
+class BuyListItemService extends AbstractBuyList implements CustomerBuyListItemServiceInterface
 {
-    protected BuyListItemRepositoryInterface $buyListItemRepository;
-    protected BuyListRepositoryInterface $buyListRepository;
     protected BuyListItemCollectionFactory $buyListItemCollectionFactory;
-    protected Settings $buyListSettings;
-    protected ProductRepositoryInterface $productRepository;
     protected BuyListItemFactory $buyListItemFactory;
-    protected ManagerInterface $eventManager;
 
     public function __construct(
-        BuyListItemRepositoryInterface $buyListItemRepository,
-        BuyListRepositoryInterface $buyListRepository,
-        BuyListItemCollectionFactory $buyListItemCollectionFactory,
         Settings $buyListSettings,
+        BuyListRepositoryInterface $buyListRepository,
+        BuyListItemRepositoryInterface $buyListItemRepository,
         ProductRepositoryInterface $productRepository,
-        BuyListItemFactory $buyListItemFactory,
-        ManagerInterface $eventManager
+        CustomerRepositoryInterface $customerRepository,
+        StoreRepositoryInterface $storeRepository,
+        ManagerInterface $eventManager,
+        BuyListItemCollectionFactory $buyListItemCollectionFactory,
+        BuyListItemFactory $buyListItemFactory
     ) {
-        $this->buyListItemRepository = $buyListItemRepository;
-        $this->buyListRepository = $buyListRepository;
+        parent::__construct(
+            $buyListSettings,
+            $buyListRepository,
+            $buyListItemRepository,
+            $productRepository,
+            $customerRepository,
+            $storeRepository,
+            $eventManager
+        );
         $this->buyListItemCollectionFactory = $buyListItemCollectionFactory;
-        $this->buyListSettings = $buyListSettings;
-        $this->productRepository = $productRepository;
         $this->buyListItemFactory = $buyListItemFactory;
-        $this->eventManager = $eventManager;
     }
 
     /**
@@ -56,20 +60,12 @@ class BuyListItemService implements CustomerBuyListItemServiceInterface
 
         $buyListItem = $this->buyListItemRepository->getById($id);
 
-        $buyList = $this->buyListRepository->getById($buyListItem->getBuyListId());
-
-        if ($buyList->getCustomerId() !== $customerId) {
+        if (!$this->isCustomerBelongsToBuyList($buyListItem->getBuyListId(), $customerId)) {
             throw new NoSuchEntityException(
                 __(
                     'The buy list with ID %1 does not belong to the logged in customer.',
                     $buyListItem->getBuyListId()
                 )
-            );
-        }
-
-        if (!$this->isBuyListEnabled($buyList->getId())) {
-            throw new ValidatorException(
-                __('It is not possible to add items to the buy list because this buy list is disabled.')
             );
         }
 
@@ -89,18 +85,11 @@ class BuyListItemService implements CustomerBuyListItemServiceInterface
     ): BuyListItemInterface {
         if (!$this->isBuyListEnabled($buyListId)) {
             throw new ValidatorException(
-                __('It is not possible to add items to the buy list because this buy list is disabled.')
+                __(
+                    'This buy list is disabled, it is not possible to add or update items.'
+                )
             );
         }
-
-        // if ($buyList->getCustomerId() !== $customerId) {
-        //     throw new NoSuchEntityException(
-        //         __(
-        //             'The buy list with ID %1 does not belong to the logged in customer.',
-        //             $buyListItem->getBuyListId()
-        //         )
-        //     );
-        // }
 
         /** @var BuyListItemCollection $buyListItemCollection */
         $buyListItemCollection = $this->buyListItemCollectionFactory->create()
@@ -114,19 +103,30 @@ class BuyListItemService implements CustomerBuyListItemServiceInterface
             ));
         }
 
-        if (!$this->isValidProductId($item->getProductId())) {
-            throw new NoSuchEntityException(__('The product with ID %1 does not exist.'));
-        }
-
         $this->eventManager->dispatch(
             'buy_list_item_api_customer_save_before',
             ['$item' => $item]
         );
 
         /** @var BuyListItemInterface $item */
-        $buyListItem = $item->getId() ?
-            $this->buyListItemRepository->getById($item->getId()) :
-            $this->buyListItemFactory->create();
+        if ($item->getId()) {
+            $buyListItem = $this->buyListItemRepository->getById($item->getId());
+
+            if ($item->getProductId() && !$this->isValidProductId($item->getProductId())) {
+                throw new NoSuchEntityException(__('The product with ID %1 does not exist.'));
+            }
+
+            if (!$this->isCustomerBelongsToBuyList($buyListItem->getBuyListId(), $customerId)) {
+                throw new NoSuchEntityException(
+                    __(
+                        'The buy list with ID %1 does not belong to the logged in customer.',
+                        $buyListItem->getBuyListId()
+                    )
+                );
+            }
+        } else {
+            $buyListItem = $this->buyListItemFactory->create();
+        }
 
         $buyListItem->setBuyListId($buyListId);
         $buyListItem->setQty($item->getQty());
@@ -156,9 +156,7 @@ class BuyListItemService implements CustomerBuyListItemServiceInterface
             ['buyList' => $buyListItem]
         );
 
-        $buyList = $this->buyListRepository->getById($buyListItem->getBuyListId());
-
-        if ($buyList->getCustomerId() !== $customerId) {
+        if (!$this->isCustomerBelongsToBuyList($buyListItem->getBuyListId(), $customerId)) {
             throw new NoSuchEntityException(
                 __(
                     'The buy list with ID %1 does not belong to the logged in customer.',
@@ -176,39 +174,5 @@ class BuyListItemService implements CustomerBuyListItemServiceInterface
             $id,
             $buyListId
         );
-    }
-
-    protected function isBuyListEnabled(int $buyListId): bool
-    {
-        $buyList = $this->buyListRepository->getById($buyListId);
-
-        if (!$buyList->getIsActive()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function isListFull(int $buyListSize): bool
-    {
-        if (
-            !empty($this->buyListSettings->getMaxQtyItems()) &&
-            $this->buyListSettings->getMaxQtyItems() <= $buyListSize
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    protected function isValidProductId(int $productId): bool
-    {
-        $product = $this->productRepository->getById($productId);
-
-        if (!$product->getId()) {
-            return false;
-        }
-
-        return true;
     }
 }
