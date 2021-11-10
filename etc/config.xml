@@ -11,7 +11,6 @@
             <customer>
                 <max_qty_lists></max_qty_lists>
                 <max_qty_items></max_qty_items>
-                <show_logged>1</show_logged>
             </customer>
         </buy_list>
     </default>

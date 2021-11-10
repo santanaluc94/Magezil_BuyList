@@ -13,7 +13,7 @@ class Settings
     private const BUY_LIST_AVAILABLE_CUSTOMER_GROUPS = 'buy_list/general/available_customer_groups';
     private const BUY_LIST_MODULE_DELETE_LISTS = 'buy_list/general/delete_lists';
 
-    /* Api settings */
+    /* Customer settings */
     private const BUY_LIST_MAX_QTY_LISTS = 'buy_list/customer/max_qty_lists';
     private const BUY_LIST_MAX_QTY_ITEMS = 'buy_list/customer/max_qty_items';
 

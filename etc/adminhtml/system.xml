@@ -62,12 +62,6 @@
                     <comment>Maximum amount of items allowed per buy list. If you have no item limit, leave the value empty.</comment>
                 </field>
 
-                <field id="show_logged" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>Show Only Logged</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Display button to add buy list only for logged customers.</comment>
-                </field>
-
                 <depends>
                     <field id="buy_list/general/enable">1</field>
                 </depends>
