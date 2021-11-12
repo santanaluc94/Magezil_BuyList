@@ -7,7 +7,6 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Customer\Model\SessionFactory;
 use Magezil\BuyList\Model\ResourceModel\BuyList\CollectionFactory as BuyListCollectionFactory;
 use Magezil\BuyList\Model\ResourceModel\BuyList\Collection as BuyListCollection;
-use Magezil\BuyList\Model\BuyList;
 use Magento\Theme\Block\Html\Pager;
 
 class Listing extends Template
@@ -82,7 +81,7 @@ class Listing extends Template
         return $this;
     }
 
-    public function getPagerHtml()
+    public function getPagerHtml(): string
     {
         return $this->getChildHtml('pager');
     }

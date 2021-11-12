@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @var \Magezil\BuyList\Block\Listing $block
+ */
+?>
+<div class="actions-toolbar">
+    <div class="primary" style="float: right">
+        <button id="buttonOpenMyModal" class="action save primary">
+            <span><?= __('Add new Buy List') ?></span>
+        </button>
+    </div>
+</div>
+<div id="modalAddNewBuyList">
+    <div class="messages"></div>
+    <form class="form" action="<?= $block->getSaveUrl() ?>" method="POST" id="addBuyListForm">
+        <fieldset class="fieldset info">
+            <?= $block->getBlockHtml('formkey') ?>
+
+            <div class="field required">
+                <label class="label" for="title">
+                    <span><?= __('Title') ?></span>
+                </label>
+                <div class="control">
+                    <input type="text" name="title" value="<?= $block->getAddress() ?>" title="<?= __('Title') ?>" class="input-text" id="title">
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label" for="is_active">
+                    <span><?= __('Status') ?></span>
+                </label>
+                <div class="control">
+                    <select id="is_active" name="is_active" title="<?= __('Status') ?>" class="">
+                        <option value="0"><?= __('Inactive') ?></option>
+                        <option value="1" selected><?= __('Active') ?></option>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+        <div class="actions-toolbar">
+            <div class="primary" style="float: right">
+                <button type="submit" class="action save primary" id="saveBuyList" title="<?= __('Save Buy List') ?>" style="margin: 0">
+                    <span><?= __('Save') ?></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/x-magento-init">
+    {
+        "#modalAddNewBuyList": {
+            "Magezil_BuyList/js/modal/create": {
+                "popupTitle": "<?= __('Add new Buy List') ?>",
+                "innerWidth": "400"
+            }
+        }
+    }
+</script>
