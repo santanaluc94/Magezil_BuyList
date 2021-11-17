@@ -1,44 +1,31 @@
 <?php
 
-use Magezil\BuyList\Api\Data\BuyListInterface;
-
 /**
  * @var \Magezil\BuyList\Block\Listing $block
  */
 ?>
 <?php if ($block->hasBuyLists()) : ?>
-    <div class="table-wrapper">
-        <table class="data table">
-            <thead>
-                <tr>
-                    <th scope="col" class="col"><?= __('Buy List #') ?></th>
-                    <th scope="col" class="col"><?= __('Title') ?></th>
-                    <th scope="col" class="col"><?= __('Is active') ?></th>
-                    <th scope="col" class="col"><?= __('Action') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php /** @var BuyListInterface $buyList */ ?>
-                <?php foreach ($block->getBuyLists() as $buyList) : ?>
-                    <tr>
-                        <td class="col"><?= $buyList->getId() ?></td>
-                        <td class="col"><?= $buyList->getTitle() ?></td>
-                        <td class="col"><?= $block->formatActive($buyList->getIsActive()) ?></td>
-                        <td class="col">
-                            <a class="action view" href="<?= $block->getUrlToView($buyList->getId()) ?>">
-                                <span><?= __('View Buy List') ?></span>
-                            </a>
-                            <?php if ($buyList->getIsActive()) : ?>
-                                <a class="action order" href="<?= $block->getUrlToReorder($buyList->getId()) ?>">
-                                    <span><?= __('Reorder') ?></span>
-                                </a>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+    <?php $myBuyListsJsonData = $block->getMyBuyListsJsonData(); ?>
+    <script type="text/x-magento-init">
+            {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "buy-list-table": {
+                        "component": "Magezil_BuyList/js/myBuyLists",
+                        "items": <?= $myBuyListsJsonData; ?>
+                    }
+                }
+            }
+        }
+    }
+    </script>
+
+    <div data-bind="scope: 'buy-list-table'" id="buyListTable" style="margin: 20px 0">
+        <!-- ko template: getTemplate() -->
+        <!-- /ko -->
     </div>
+
     <?php if ($block->getPagerHtml()) : ?>
         <div class="toolbar bottom"><?= $block->getPagerHtml() ?></div>
     <?php endif ?>

@@ -35,7 +35,9 @@ define([
                         $('<div class="message message-error error message-popup"><div><span>' + response.message + '</span></div></div>').appendTo($('.messages'));
                     }
 
+                    $('#modalAddNewBuyList').modal('closeModal');
                     $('<div class="message message-success success message-popup"><div><span>' + response.message + '</span></div></div>').appendTo($('.messages'));
+                    $('#buyListTable').trigger('updateBuyListTable');
                 },
                 error: function (response) {
                     $('body').loader('hide');

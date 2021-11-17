@@ -76,7 +76,7 @@ class ReorderPost extends GeneralBuyList implements ActionInterface
                 ->getCustomer()
                 ->getId();
 
-            if (!$buyList->getId() || $customerId !== $buyList->getCustomerId()) {
+            if (!$buyList->getId() || $customerId !== $buyList->getCustomerId() || !$buyList->getIsActive()) {
                 throw new NoSuchEntityException(__('You don\'t have access to this list.'));
             }
 

@@ -1,0 +1,25 @@
+<div class="table-wrapper">
+    <table class="data table">
+        <thead>
+            <tr>
+                <th scope="col" class="col">Buy List #</th>
+                <th scope="col" class="col">Title</th>
+                <th scope="col" class="col">Is Active</th>
+                <th scope="col" class="col">Action</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: buyLists">
+            <tr class="col">
+                <td class="col" data-bind="text: entity_id"></td>
+                <td class="col" data-bind="text: title"></td>
+                <td class="col" data-bind="text: $parent.checkIsActive(is_active)"></td>
+                <td class="col">
+                    <a class="action view" data-bind="attr: {href: $parent.getUrlToView(entity_id)}">View</a>
+                    <!-- ko if: $parent.isActive(is_active) -->
+                    <a class="action view" data-bind="attr: {href: $parent.getUrlToReorder(entity_id)}">Reorder</a>
+                    <!-- /ko -->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

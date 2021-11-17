@@ -11,6 +11,7 @@ use Magento\Theme\Block\Html\Pager;
 
 class Listing extends Template
 {
+    private const LIST_QTY = 4;
     private SessionFactory $customerSession;
     private BuyListCollectionFactory $buyListCollectionFactory;
 
@@ -31,12 +32,20 @@ class Listing extends Template
 
     public function getBuyLists(): BuyListCollection
     {
+        $pageSize = $this->getRequest()->getParam('limit') ?
+            $this->getRequest()->getParam('limit') :
+            self::LIST_QTY;
+        $page = $this->getRequest()->getParam('p') ?
+            $this->getRequest()->getParam('p') :
+            1;
         $customerId = $this->customerSession->create()
             ->getCustomer()
             ->getId();
 
         return $this->buyListCollectionFactory->create()
-            ->addFieldToFilter('customer_id', $customerId);
+            ->addFieldToFilter('customer_id', $customerId)
+            ->setPageSize($pageSize)
+            ->setCurPage($page);
     }
 
     public function formatActive(bool $isActive): string
@@ -54,28 +63,25 @@ class Listing extends Template
         return $this->getUrl('buy_list/lists/reorderPost', ['id' => $buyListId]);
     }
 
+    public function getMyBuyListsJsonData(): string
+    {
+        return json_encode($this->getBuyLists()->toArray()['items']);
+    }
+
     protected function _prepareLayout(): self
     {
-        $pageSize = $this->getRequest()->getParam('limit') ?
-            $this->getRequest()->getParam('limit') :
-            1;
-        $page = $this->getRequest()->getParam('p') ?
-            $this->getRequest()->getParam('p') :
-            1;
-
-        $buyListCollection = $this->getBuyLists()
-            ->setPageSize($pageSize)
-            ->setCurPage($page);
+        $buyListCollection = $this->getBuyLists();
 
         if ($this->hasBuyLists()) {
-            $this->setChild(
-                'pager',
-                $this->getLayout()
-                    ->createBlock(Pager::class, 'buy_list_listing_pager')
-                    ->setAvailableLimit([5 => 5, 10 => 10, 15 => 15])
-                    ->setShowPerPage(true)
-                    ->setCollection($buyListCollection)
-            );
+            $pager = $this->getLayout()
+                ->createBlock(Pager::class, 'buy.list.listing.pager')
+                ->setAvailableLimit([
+                    self::LIST_QTY => self::LIST_QTY,
+                    self::LIST_QTY * 2 => self::LIST_QTY * 2,
+                    self::LIST_QTY * 3 =>self::LIST_QTY * 3
+                ])->setShowPerPage(true)
+                ->setCollection($buyListCollection);
+            $this->setChild('pager', $pager);
         }
 
         return $this;

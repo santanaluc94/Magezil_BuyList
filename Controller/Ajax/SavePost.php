@@ -88,7 +88,7 @@ class SavePost extends GeneralBuyList implements ActionInterface
             }
 
             $title = filter_var($this->request->getParam('title'), FILTER_SANITIZE_STRING);
-            $isActive = (bool) $this->request->getParam('isActive');
+            $isActive = (bool) $this->request->getParam('is_active');
             $customerId = (int) $this->getCustomerSession()->getCustomer()->getId();
             $storeId = (int) $this->storeManager->getStore()->getId();
 
