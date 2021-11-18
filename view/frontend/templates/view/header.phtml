@@ -1,0 +1,72 @@
+<?php
+
+/** @var \Magezil\BuyList\Block\View $block */
+
+$currentBuyList = $block->getCurrentBuyList();
+$currentBuyListJsonData = $block->getCurrentBuyListJsonData();
+?>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "current-buy-list-header": {
+                        "component": "Magezil_BuyList/js/view/header",
+                        "items": <?= $currentBuyListJsonData; ?>
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<div data-bind="scope: 'current-buy-list-header'" id="currentBuyListHeader">
+    <!-- ko template: getTemplate() -->
+    <!-- /ko -->
+</div>
+
+<div class="block block-buy-list-info">
+    <div class="block-title">
+        <strong><?= __('Information') ?></strong>
+    </div>
+    <div class="block-content">
+        <div class="box">
+            <div class="box-content">
+                <strong class="box-title">
+                    <?= __('Title:') ?>
+                </strong>
+                <span class="box-content">
+                    <?= $currentBuyList->getTitle() ?>
+                </span>
+            </div>
+
+            <div class="box-content">
+                <strong class="box-title">
+                    <?= __('Items:') ?>
+                </strong>
+                <span class="box-content">
+                    <?= $block->getQtyItems() ?>
+                </span>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-content">
+                <strong class="box-title">
+                    <?= __('Created At:') ?>
+                </strong>
+                <span class="box-content">
+                    <?= $block->getCreatedAtFormatted(); ?>
+                </span>
+            </div>
+
+            <div class="box-content">
+                <strong class="box-title">
+                    <?= __('Updated At:') ?>
+                </strong>
+                <span class="box-content">
+                    <?= $block->getUpdatedAtFormatted(); ?>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

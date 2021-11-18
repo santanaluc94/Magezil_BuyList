@@ -48,21 +48,6 @@ class Listing extends Template
             ->setCurPage($page);
     }
 
-    public function formatActive(bool $isActive): string
-    {
-        return $isActive ? __('Active') : __('Inactive');
-    }
-
-    public function getUrlToView(int $buyListId): string
-    {
-        return $this->getUrl('buy_list/lists/view', ['id' => $buyListId]);
-    }
-
-    public function getUrlToReorder(int $buyListId): string
-    {
-        return $this->getUrl('buy_list/lists/reorderPost', ['id' => $buyListId]);
-    }
-
     public function getMyBuyListsJsonData(): string
     {
         return json_encode($this->getBuyLists()->toArray()['items']);

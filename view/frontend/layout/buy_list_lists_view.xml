@@ -1,8 +1,15 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="customer_account"/>
+    <head>
+        <css src="Magezil_BuyList::css/view/style.css" rel="stylesheet" type="text/css" />
+    </head>
     <body>
+        <referenceContainer name="page.main.title">
+            <block class="Magezil\BuyList\Block\View" name="buy.list.status" template="Magezil_BuyList::view/status.phtml" after="customer.account.buy.list" />
+        </referenceContainer>
         <referenceContainer name="content">
+            <block class="Magezil\BuyList\Block\View" name="buy.list.view" template="Magezil_BuyList::view/header.phtml" />
         </referenceContainer>
 
         <referenceBlock name="sidebar.additional" remove="true" />

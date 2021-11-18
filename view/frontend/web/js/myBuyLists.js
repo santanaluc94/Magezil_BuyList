@@ -12,8 +12,9 @@ define([
 
         initialize: function (config) {
             var self = this;
+
             this._super();
-            this.buyLists = ko.observableArray(config.items);
+            self.buyLists = ko.observableArray(config.items);
 
             $(document).on('updateBuyListTable', function () {
                 self.updateBuyListTable();

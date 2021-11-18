@@ -1,0 +1,48 @@
+.buy-list-status {
+    border: 2px solid #cccccc;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 6px 0 3px 0;
+    text-transform: uppercase;
+    vertical-align: top;
+    padding: 5px 10px;
+}
+
+.secundary {
+    background-image: none;
+    background: #eeeeee;
+    border: 1px solid #cccccc;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    padding: 7px 15px;
+    font-size: 1.4rem;
+    line-height: 1.6rem;
+    box-sizing: border-box;
+    vertical-align: middle;
+    text-decoration: none;
+    border-radius: 3px;
+    margin-right: 15px;
+}
+
+.secundary:hover {
+    background: #e1e1e1;
+    border: 1px solid #cccccc;
+    color: #333333;
+    text-decoration: none;
+}
+
+.secundary:visited {
+    text-decoration: none;
+}
+
+a.secundary>span {
+    color: #333333;
+    text-decoration: none;
+}
+
+.header-view {
+    float: right;
+}

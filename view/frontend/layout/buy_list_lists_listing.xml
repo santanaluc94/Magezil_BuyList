@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="customer_account"/>
+    <head>
+        <css src="Magezil_BuyList::css/listing/style.css" rel="stylesheet" type="text/css" />
+    </head>
     <body>
         <referenceContainer name="content">
             <block class="Magezil\BuyList\Block\Create" name="buy.list.create" template="Magezil_BuyList::listing/modal/create.phtml" cacheable="false" />

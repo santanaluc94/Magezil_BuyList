@@ -3,6 +3,7 @@
 namespace Magezil\BuyList\Api;
 
 use Magezil\BuyList\Api\Data\BuyListItemInterface;
+use Magezil\BuyList\Model\ResourceModel\BuyListItem\Collection as BuyListItemCollection;
 
 interface BuyListItemRepositoryInterface
 {
@@ -13,4 +14,6 @@ interface BuyListItemRepositoryInterface
     public function delete(BuyListItemInterface $buyListItem): bool;
 
     public function deleteById(int $id): bool;
+
+    public function getByBuyListId(int $buyListId): ?BuyListItemCollection;
 }

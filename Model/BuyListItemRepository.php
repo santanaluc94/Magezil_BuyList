@@ -5,8 +5,10 @@ namespace Magezil\BuyList\Model;
 use Magezil\BuyList\Api\BuyListItemRepositoryInterface;
 use Magezil\BuyList\Model\BuyListItemFactory;
 use Magezil\BuyList\Model\ResourceModel\BuyListItem as ResourceModelBuyListItem;
+use Magezil\BuyList\Model\ResourceModel\BuyListItem\CollectionFactory as BuyListItemCollectionFactory;
 use Magezil\BuyList\Api\Data\BuyListItemInterface;
 use Magezil\BuyList\Model\BuyListItem;
+use Magezil\BuyList\Model\ResourceModel\BuyListItem\Collection as BuyListItemCollection;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\CouldNotDeleteException;
@@ -15,13 +17,16 @@ class BuyListItemRepository implements BuyListItemRepositoryInterface
 {
     private BuyListItemFactory $buyListItemFactory;
     private ResourceModelBuyListItem $resourceModelBuyListItem;
+    private BuyListItemCollectionFactory $buyListItemCollectionFactory;
 
     public function __construct(
         BuyListItemFactory $buyListItemFactory,
-        ResourceModelBuyListItem $resourceModelBuyListItem
+        ResourceModelBuyListItem $resourceModelBuyListItem,
+        BuyListItemCollectionFactory $buyListItemCollectionFactory
     ) {
         $this->buyListItemFactory = $buyListItemFactory;
         $this->resourceModelBuyListItem = $resourceModelBuyListItem;
+        $this->buyListItemCollectionFactory = $buyListItemCollectionFactory;
     }
 
     public function getById(int $id): BuyListItemInterface
@@ -71,5 +76,18 @@ class BuyListItemRepository implements BuyListItemRepositoryInterface
     {
         $buyListItem = $this->getById($id);
         return $this->delete($buyListItem);
+    }
+
+    public function getByBuyListId(int $buyListId): ?BuyListItemCollection
+    {
+        /** @var BuyListItemCollection $buyListItemCollection */
+        $buyListItemCollection = $this->buyListItemCollectionFactory->create()
+            ->addFieldToFilter(BuyListItemInterface::BUY_LIST_ID, $buyListId);
+
+        if (!$buyListItemCollection->getSize()) {
+            return null;
+        }
+
+        return $buyListItemCollection;
     }
 }

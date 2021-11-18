@@ -1,0 +1,15 @@
+#buyListTable {
+    margin: 20px 0;
+}
+
+.modal-inner-wrap {
+    max-width: 40%;
+}
+
+#modalAddNewBuyList {
+    display: none;
+}
+
+.header-listing {
+    float: right;
+}
