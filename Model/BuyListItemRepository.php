@@ -31,7 +31,6 @@ class BuyListItemRepository implements BuyListItemRepositoryInterface
 
     public function getById(int $id): BuyListItemInterface
     {
-        /** @var BuyListItem $buyListItem */
         $buyListItem = $this->buyListItemFactory->create();
         $this->resourceModelBuyListItem->load($buyListItem, $id);
 
@@ -80,7 +79,6 @@ class BuyListItemRepository implements BuyListItemRepositoryInterface
 
     public function getByBuyListId(int $buyListId): ?BuyListItemCollection
     {
-        /** @var BuyListItemCollection $buyListItemCollection */
         $buyListItemCollection = $this->buyListItemCollectionFactory->create()
             ->addFieldToFilter(BuyListItemInterface::BUY_LIST_ID, $buyListId);
 
@@ -89,5 +87,18 @@ class BuyListItemRepository implements BuyListItemRepositoryInterface
         }
 
         return $buyListItemCollection;
+    }
+
+    public function getItemByBuyListId(int $buyListId, int $productId): ?BuyListItemInterface
+    {
+        $buyListItemCollection = $this->buyListItemCollectionFactory->create()
+            ->addFieldToFilter(BuyListItemInterface::BUY_LIST_ID, $buyListId)
+            ->addFieldToFilter(BuyListItemInterface::PRODUCT_ID, $productId);
+
+        if (!$buyListItemCollection->getSize()) {
+            return null;
+        }
+
+        return $buyListItemCollection->getFirstItem();
     }
 }

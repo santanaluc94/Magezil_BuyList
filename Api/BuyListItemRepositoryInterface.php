@@ -16,4 +16,6 @@ interface BuyListItemRepositoryInterface
     public function deleteById(int $id): bool;
 
     public function getByBuyListId(int $buyListId): ?BuyListItemCollection;
+
+    public function getItemByBuyListId(int $buyListId, int $productId): ?BuyListItemInterface;
 }

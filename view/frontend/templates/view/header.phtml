@@ -70,3 +70,12 @@ $currentBuyListJsonData = $block->getCurrentBuyListJsonData();
         </div>
     </div>
 </div>
+
+<div>
+    <?php if ($block->hasQtyItems()) : ?>
+    <?php else : ?>
+        <div class="message info empty">
+            <span><?= __('You have not items in this buy lists.') ?></span>
+        </div>
+    <?php endif; ?>
+</div>

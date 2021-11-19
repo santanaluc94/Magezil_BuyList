@@ -58,8 +58,19 @@ class View extends Template
 
     public function getQtyItems(): int
     {
-        return $this->buyListItemRepository->getByBuyListId(
+        $buyListItems = $this->buyListItemRepository->getByBuyListId(
             $this->getCurrentBuyList()->getId()
-        )->getSize();
+        );
+
+        if (is_null($buyListItems)) {
+            return 0;
+        }
+
+        return $buyListItems->getSize();
+    }
+
+    public function hasQtyItems(): bool
+    {
+        return $this->getQtyItems() ? true : false;
     }
 }

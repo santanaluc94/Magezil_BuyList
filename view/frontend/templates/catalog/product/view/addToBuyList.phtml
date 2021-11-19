@@ -1,0 +1,29 @@
+<?php
+
+/** @var \Magezil\BuyList\Block\Catalog\Product\AddToBuyList $block */
+
+?>
+
+<?php if ($block->isBuyListEnabled()) : ?>
+    <?php $buyListsJsonData = $block->getBuyListsJsonData(); ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "buy-list-add-to": {
+                            "component": "Magezil_BuyList/js/catalog/product/addTo",
+                            "productId": <?= $block->getProductId(); ?>,
+                            "items": <?= $buyListsJsonData; ?>
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <div data-bind="scope: 'buy-list-add-to'">
+        <!-- ko template: getTemplate() -->
+        <!-- /ko -->
+    </div>
+<?php endif; ?>

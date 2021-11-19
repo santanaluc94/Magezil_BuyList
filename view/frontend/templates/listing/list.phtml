@@ -7,18 +7,18 @@
 <?php if ($block->hasBuyLists()) : ?>
     <?php $myBuyListsJsonData = $block->getMyBuyListsJsonData(); ?>
     <script type="text/x-magento-init">
-            {
-        "*": {
-            "Magento_Ui/js/core/app": {
-                "components": {
-                    "buy-list-table": {
-                        "component": "Magezil_BuyList/js/myBuyLists",
-                        "items": <?= $myBuyListsJsonData; ?>
+        {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "buy-list-table": {
+                            "component": "Magezil_BuyList/js/myBuyLists",
+                            "items": <?= $myBuyListsJsonData; ?>
+                        }
                     }
                 }
             }
         }
-    }
     </script>
 
     <div data-bind="scope: 'buy-list-table'" id="buyListTable">
@@ -31,6 +31,6 @@
     <?php endif ?>
 <?php else : ?>
     <div class="message info empty">
-        <span><?= __('You have not buy lists yet.') ?></span>
+        <span><?= __('You have not buy lists.') ?></span>
     </div>
 <?php endif ?>

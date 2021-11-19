@@ -10,6 +10,21 @@
     display: none;
 }
 
-.header-listing {
+.buy-list-header-listing {
     float: right;
+}
+
+.actions-toolbar-buy-list::before {
+    content: '';
+    display: table;
+}
+
+.actions-toolbar-buy-list::after {
+    clear: both;
+    content: '';
+    display: table;
+}
+
+.actions-toolbar-buy-list {
+    margin-bottom: 20px;
 }

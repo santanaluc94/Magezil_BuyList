@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <referenceBlock name="product.info.addto">
+                <block  class="Magezil\BuyList\Block\Catalog\Product\AddToBuyList"
+                        name="magezil.buy.list.addto"
+                        template="Magezil_BuyList::catalog/product/view/addToBuyList.phtml" cacheable="false"/>
+            </referenceBlock>
+        </referenceContainer>
+    </body>
+</page>
