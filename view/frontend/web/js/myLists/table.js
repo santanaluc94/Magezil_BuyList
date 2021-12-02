@@ -7,7 +7,7 @@ define([
 
     return Component.extend({
         defaults: {
-            template: 'Magezil_BuyList/myBuyLists'
+            template: 'Magezil_BuyList/myLists/table',
         },
 
         initialize: function (config) {
@@ -33,8 +33,8 @@ define([
             return window.location.origin + '/buy_list/lists/view/id/' + buyListId;
         },
 
-        getUrlToReorder: function (buyListId) {
-            return window.location.origin + '/buy_list/lists/reorderPost/id/' + buyListId;
+        getUrlOrder: function (buyListId) {
+            return window.location.origin + '/buy_list/lists/orderPost/id/' + buyListId;
         },
 
         updateBuyListTable: function () {

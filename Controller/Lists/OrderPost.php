@@ -20,7 +20,7 @@ use Magento\Quote\Model\Quote;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-class ReorderPost extends GeneralBuyList implements ActionInterface
+class OrderPost extends GeneralBuyList implements ActionInterface
 {
     protected RequestInterface $request;
     protected BuyListRepositoryInterface $buyListRepository;

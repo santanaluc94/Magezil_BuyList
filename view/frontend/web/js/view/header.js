@@ -22,9 +22,9 @@ define([
             return (this.currentBuyList().is_active == true) ? 'Disable List' : 'Enable List';
         },
 
-        getUrlToReorder: function () {
+        getUrlOrder: function () {
             var self = this;
-            return window.location.origin + '/buy_list/lists/reorderPost/id/' + self.currentBuyList().entity_id;
+            return window.location.origin + '/buy_list/lists/orderPost/id/' + self.currentBuyList().entity_id;
         },
 
         updateBuyListStatus: function () {

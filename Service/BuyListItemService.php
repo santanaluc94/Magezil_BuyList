@@ -123,6 +123,14 @@ class BuyListItemService extends AbstractBuyList implements BuyListItemServiceIn
     {
         $buyListItem = $this->buyListItemRepository->getById($id);
 
+        if ($buyListItem->getBuyListId() !== $buyListId) {
+            throw new ValidatorException(__(
+                'The item with ID %1 does not belong to the buy list with ID %2.',
+                $id,
+                $buyListId
+            ));
+        }
+
         $this->eventManager->dispatch(
             'buy_list_item_api_remove_before',
             ['buyList' => $buyListItem]

@@ -75,4 +75,45 @@ class Settings
             ScopeInterface::SCOPE_STORE
         );
     }
+
+    public function isCustomerGroupIdAvailable(?int $customerGroupId): bool
+    {
+        if (is_null($customerGroupId)) {
+            return false;
+        }
+
+        return in_array($customerGroupId, $this->getAvailableCustomerGroups());
+    }
+
+    public function canCreateListToCustomer(int $customerId): bool
+    {
+        if ($this->getMaxQtyLists() === 0) {
+            return true;
+        }
+
+        $multipleWishlistCollection = $this->multipleWishlistCollectionFactory->create()
+            ->addFieldToFilter('customer_id', $customerId);
+
+        if ($multipleWishlistCollection->getSize() >= $this->getMaxQtyLists()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function canCreateItemToList(int $wishlistId): bool
+    {
+        if ($this->getMaxQtyItems() === 0) {
+            return true;
+        }
+
+        $multipleWishlistItemCollection = $this->multipleWishlistItemCollectionFactory->create()
+            ->addFieldToFilter('wishlist_id', $wishlistId);
+
+        if ($multipleWishlistItemCollection->getSize() >= $this->getMaxQtyItems()) {
+            return false;
+        }
+
+        return true;
+    }
 }
