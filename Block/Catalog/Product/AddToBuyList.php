@@ -7,10 +7,8 @@ use Magento\Framework\View\Element\Template\Context;
 use Magezil\BuyList\Model\Source\Config\Settings;
 use Magezil\BuyList\Model\ResourceModel\BuyList\CollectionFactory as BuyListCollectionFactory;
 use Magento\Customer\Model\SessionFactory as CustomerSessionFactory;
-use Magento\Framework\Registry;
-
-use Magento\Customer\Model\Customer;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Customer\Model\Customer;
 use Magezil\BuyList\Model\ResourceModel\BuyList\Collection as BuyListCollection;
 use Magento\Store\Api\Data\StoreInterface;
 
@@ -19,26 +17,29 @@ class AddToBuyList extends Template
     protected Settings $settings;
     protected BuyListCollectionFactory $buyListCollectionFactory;
     protected CustomerSessionFactory $customerSessionFactory;
-    protected Registry $registry;
     protected StoreManagerInterface $storeManager;
-
 
     public function __construct(
         Context $context,
-        Settings $settings
+        Settings $settings,
+        BuyListCollectionFactory $buyListCollectionFactory,
+        CustomerSessionFactory $customerSessionFactory,
+        StoreManagerInterface $storeManager
     ) {
         parent::__construct($context);
         $this->settings = $settings;
-        $this->objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->buyListCollectionFactory = $this->objectManager->get(BuyListCollectionFactory::class);
-        $this->customerSessionFactory = $this->objectManager->get(CustomerSessionFactory::class);
-        $this->registry = $this->objectManager->get(Registry::class);
-        $this->storeManager = $this->objectManager->get(StoreManagerInterface::class);
+        $this->buyListCollectionFactory = $buyListCollectionFactory;
+        $this->customerSessionFactory = $customerSessionFactory;
+        $this->storeManager = $storeManager;
     }
 
     public function isBuyListEnabled(): bool
     {
-        return $this->settings->isModuleEnable();
+        $customerSession = $this->customerSessionFactory->create();
+
+        return $this->settings->isModuleEnable() &&
+            $customerSession->isLoggedIn() &&
+            $this->settings->isCustomerGroupIdAvailable($customerSession->getCustomer()->getGroupId());
     }
 
     public function getCustomer(): Customer
@@ -62,7 +63,7 @@ class AddToBuyList extends Template
 
     public function getProductId(): int
     {
-        return $this->registry->registry('current_product')->getId();
+        return $this->getRequest()->getParam('id');
     }
 
     public function getStore(): StoreInterface

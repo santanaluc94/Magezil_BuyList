@@ -1,0 +1,55 @@
+.boxBuyList {
+    margin-top: 20px;
+    border-top: 1px solid #c1c1c1;
+}
+
+.boxBuyList__header {
+    color: #666666;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    margin-top: 20px;
+}
+
+.boxBuyList__fields {
+    margin: 20px 0 0 0;
+    display: flex;
+}
+
+.boxBuyList__activeLists {
+    width: 75%;
+}
+
+.boxBuyList_activeListsField {
+    width: 100%;
+}
+
+.boxBuyList__fieldQty {
+    width: 20%;
+    margin-left: 5%;
+}
+
+.boxBuyList_qty {
+    width: 54px !important;
+
+}
+
+.fieldQty__input {
+    width: 100%;
+}
+
+.boxBuyList_Label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.boxBuyList__actions {
+    margin-top: 20px;
+}
+
+.boxBuyList_qty--error {
+    margin-top: 7px;
+    color: #e02b27;
+    font-size: 1.2rem;
+}

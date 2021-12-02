@@ -79,8 +79,7 @@ class AddItemToList extends GeneralBuyList implements ActionInterface
             $buyListId = (int) $this->request->getParam('buyListId');
             $buyList = $this->buyListRepository->getById($buyListId);
 
-            if (
-                !$buyList->getId() ||
+                        if (
                 $buyList->getCustomerId() !== $customerId ||
                 $buyList->getStoreId() !== $storeId ||
                 !!!$buyList->getIsActive()
@@ -95,6 +94,11 @@ class AddItemToList extends GeneralBuyList implements ActionInterface
             if (!$product->getId()) {
                 $resultJson->setHttpResponseCode($httpBadRequestCode);
                 throw new CouldNotSaveException(__('You can\'t add product to this buy list.'));
+            }
+
+            if ($qty <= 0) {
+                $resultJson->setHttpResponseCode($httpBadRequestCode);
+                throw new CouldNotSaveException(__('Please enter a valid quantity.'));
             }
 
             $buyListItem = $this->saveItemToBuyList($buyListId, $productId, $qty);

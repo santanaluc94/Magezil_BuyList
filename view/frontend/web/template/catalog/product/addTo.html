@@ -1,6 +1,22 @@
-<div>
-    <select data-bind="options: buyLists, optionsText: 'title', optionsValue:'entity_id', value: buyListId">
-    </select>
-    <input data-bind="value: qty" />
-    <button data-bind="click: addToBuyList">Add</button>
+<div class="boxBuyList">
+    <header class="boxBuyList__header">
+        <span data-bind="i18n: 'Buy List'"></span>
+    </header>
+    <div class="boxBuyList__fields">
+        <div class="boxBuyList__activeLists">
+            <label class="boxBuyList_Label" for="activeBuyList" data-bind="i18n: 'Active lists'"></label>
+            <select class="boxBuyList_activeListsField" id="activeBuyList"
+                data-bind="options: buyLists, optionsText: 'title', optionsValue:'entity_id', value: buyListId">
+            </select>
+        </div>
+        <div class="boxBuyList__fieldQty">
+            <label class="boxBuyList_Label" for="buyListQty" data-bind="i18n: 'Qty'"></label>
+            <div class="fieldQty__input">
+                <input type="number" min="0" value="1" class="boxBuyList_qty" id="buyListQty" data-bind="value: qty" />
+            </div>
+        </div>
+    </div>
+    <div class="boxBuyList__actions">
+        <button class="action primary" data-bind="click: addToBuyList, i18n: 'Add to List'"></button>
+    </div>
 </div>
