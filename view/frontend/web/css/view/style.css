@@ -46,3 +46,35 @@ a.secundary>span {
 .header-view {
     float: right;
 }
+
+.col-54 {
+    width: 54px;
+}
+
+.col-name {
+    width: 40%;
+}
+
+.col-price {
+    width: 15%;
+}
+
+tr.col-line {
+    position: relative;
+}
+
+td.col-data {
+    vertical-align: middle;
+}
+
+.buyListItem__actions {
+    margin-top: 25px;
+}
+
+.buyListItem__saveItems {
+    float: right;
+}
+
+.buyListItem__saveItemsButton {
+    margin: 0 !important;
+}

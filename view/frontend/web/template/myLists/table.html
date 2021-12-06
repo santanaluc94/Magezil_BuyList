@@ -2,10 +2,10 @@
     <table class="data table">
         <thead>
             <tr>
-                <th scope="col" class="col">Buy List #</th>
-                <th scope="col" class="col">Title</th>
-                <th scope="col" class="col">Is Active</th>
-                <th scope="col" class="col">Action</th>
+                <th scope="col" class="col" data-bind="i18n: 'Buy List #'"></th>
+                <th scope="col" class="col" data-bind="i18n: 'Title'"></th>
+                <th scope="col" class="col" data-bind="i18n: 'Is Active'"></th>
+                <th scope="col" class="col" data-bind="i18n: 'Action'"></th>
             </tr>
         </thead>
         <tbody data-bind="foreach: buyLists">
@@ -14,9 +14,10 @@
                 <td class="col" data-bind="text: title"></td>
                 <td class="col" data-bind="text: $parent.checkIsActive(is_active)"></td>
                 <td class="col">
-                    <a class="action view" data-bind="attr: {href: $parent.getUrlToView(entity_id)}">View</a>
+                    <a class="action view" data-bind="i18n: 'View', attr: {href: $parent.getUrlToView(entity_id)}"></a>
                     <!-- ko if: $parent.isActive(is_active) -->
-                    <a class="action view" data-bind="attr: {href: $parent.getUrlOrder(entity_id)}">Add to Cart</a>
+                    <a class="action view"
+                        data-bind="i18n: 'Add to Cart', attr: {href: $parent.getUrlOrder(entity_id)}"></a>
                     <!-- /ko -->
                 </td>
             </tr>

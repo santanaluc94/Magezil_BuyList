@@ -1,0 +1,49 @@
+<div class="block block-buy-list-items">
+    <div class="block-title">
+        <strong data-bind="i18n: 'Items'"></strong>
+    </div>
+
+    <input type="number" data-bind="value: buyListId" readonly hidden />
+
+    <table>
+        <thead>
+            <tr>
+                <th scope="col" class="col col-name" data-bind="i18n: 'Product Name'"></th>
+                <th scope="col" class="col" data-bind="i18n: 'Sku'"></th>
+                <th scope="col" class="col col-price" data-bind="i18n: 'Price'"></th>
+                <th scope="col" class="col col-54" data-bind="i18n: 'Qty'"></th>
+                <th scope="col" class="col col-price" data-bind="i18n: 'Subtotal'"></th>
+                <th scope="col" class="col col-54" data-bind="i18n: 'Action'"></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: buyListItems">
+            <tr class="col col-line">
+                <td class="col col-data" data-bind="text: product_name"></td>
+                <td class="col col-data" data-bind="text: sku"></td>
+                <td class="col col-data" data-bind="text: $parent.getFormattedPrice(price)"></td>
+                <td class="col col-data">
+                    <input type="number" min="0" class="buyListItem__qty"
+                        data-bind="value: qty, attr: { 'data-item-id': entity_id }" />
+                </td>
+                <td class="col col-data buyListItem__subtotal" data-bind="text: $parent.getFormattedPrice(subtotal), attr: { href: '#' }">
+                </td>
+                <td class="col col-data">
+                    <a class="action view buyListItem__remove" data-bind="i18n: 'Remove', attr: { 'data-item-id': entity_id }"></a>
+                </td>
+                <td class="buyListItem__id">
+                    <input type="number" data-bind="value: entity_id" readonly hidden />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <div class="buyListItem__actions">
+            <div class="primary buyListItem__saveItems">
+                <button type="button" class="action primary buyListItem__saveItemsButton" id="buttonSaveItems" data-bind="click: updateBuyListItems">
+                    <span data-bind="i18n: 'Save Items'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

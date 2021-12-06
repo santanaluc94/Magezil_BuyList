@@ -1,0 +1,32 @@
+<?php
+
+/** @var \Magezil\BuyList\Block\View $block */
+?>
+<?php if ($block->hasQtyItems()) : ?>
+    <?php $currentBuyListItemsJsonData = $block->getCurrentBuyListItemsJsonData(); ?>
+
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "buy-list-items": {
+                            "component": "Magezil_BuyList/js/view/items",
+                            "items": <?= $currentBuyListItemsJsonData; ?>,
+                            "buyListId": <?= $block->getBuyListId(); ?>
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <div data-bind="scope: 'buy-list-items'">
+        <!-- ko template: getTemplate() -->
+        <!-- /ko -->
+    </div>
+<?php else : ?>
+    <div class="message info empty">
+        <span><?= __('You have not items in this buy lists.') ?></span>
+    </div>
+<?php endif; ?>

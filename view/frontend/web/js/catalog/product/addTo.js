@@ -52,6 +52,7 @@ define([
                     buyListId: self.buyListId(),
                     qty: self.qty()
                 },
+                showLoader: true,
                 success: function (response) {
                     let message = '';
 

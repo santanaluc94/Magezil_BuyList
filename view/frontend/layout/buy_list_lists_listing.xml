@@ -6,10 +6,12 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Magezil\BuyList\Block\Create" name="buy.list.create" template="Magezil_BuyList::listing/modal/create.phtml" cacheable="false" />
+            <block name="buy.list.create" template="Magezil_BuyList::listing/modal/create.phtml" cacheable="false">
+                <arguments>
+                    <argument name="multiple_wishlist_create" xsi:type="object">Magezil\BuyList\ViewModel\View\Create</argument>
+                </arguments>
+            </block>
             <block class="Magezil\BuyList\Block\Listing" name="buy.list.listing" template="Magezil_BuyList::listing/list.phtml" cacheable="false" />
         </referenceContainer>
-
-        <referenceBlock name="sidebar.additional" remove="true" />
     </body>
 </page>

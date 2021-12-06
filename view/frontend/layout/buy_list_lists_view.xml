@@ -10,8 +10,7 @@
         </referenceContainer>
         <referenceContainer name="content">
             <block class="Magezil\BuyList\Block\View" name="buy.list.view" template="Magezil_BuyList::view/header.phtml" />
+            <block class="Magezil\BuyList\Block\View" name="buy.list.view.items" template="Magezil_BuyList::view/items.phtml" />
         </referenceContainer>
-
-        <referenceBlock name="sidebar.additional" remove="true" />
     </body>
 </page>
